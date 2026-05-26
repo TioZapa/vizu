@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+  <meta name="theme-color" content="#1a73e8"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="Localizador"/>
+  <title>Localizador de Clientes</title>
+  <link rel="manifest" href="manifest.json"/>
+  <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAEiElEQVR4nO3dXY7kRBCF0RzEHpBgmcMy2CYSrAJepqWS1dXjn3SmM+45z4PKdsVnR4nu6m+/f//nvwahfpl9ADCTAIgmAKIJgGgCIJoAiCYAogmAaAIgmgCIJgCiCYBoAiCaAIgmAKIJgGgCIJoAiCYAogmAaAIgmgCIJgCiCYBoAiCaAIgmAKIJgGgCINqvsw8gxd9//Xb4v/njz39vOBJeffP16P2dGfa9RNGXADq5c+jfEcN1ArhoxuBvCeE8AZz0hMHfEsJxAjjoiYO/JYT9BLDTCoO/JYSf8/8Bdlhx+Ftb97hH8gT4QqUB8jT4nCfAG5WGv7V659OLAD5RdViqntcVAtioPiTVz+8oAbxIGY6U89xDAD+kDUXa+b4jgJY7DKnn/So+gPQhSD//6ADS3/wPydchNoDkN/0zqdcjNgBoLTSA1LvdzyRel7gAEt/kI9KuT1wA8CoqgLS721lJ1ykqANiK+X2Ap9zV9vxc/krHujpfjDXA0UF6/fdPiaGqiCfArCHqeQetcA5P5DPATXoPTvVBnKV8AJW+sW1GBNVXsPIBjHb3kHoS9CWAjkYNpwj6KR3AyMf36KEc+XqV16DSAYwy647sSXCdAC6aPYSzX391AiCaAC54yt33KcexorIBVP7gNkPV61k2ANhDACc9be142vGsQgBEEwDRBEA0ARBNAEQTANEEQDQBEE0AJz3tRwOedjyrEADRygbgRwP6qno9ywYwwlPWjqccx4oEQDQBXDT77jv79VcngA5mDaHhv650AJW/OqTyV76MVDqA0UYNpTt/PwLo7O7hNPx9lQ+g0hfKVvqi36coH8AsvYfVnf8eEX8go7W5A3TlLrrqca/Cn0ga4HWIV/obYQlingCtGawjEu7+rfkMQLioAFLualclXaeoAGArLoCku9sZadcnLoDW8t7kvRKvS2QA8CE2gMS73VdSr0dsAK3lvulbydchOoDWst/81px/fACt5Q5B6nm/EsAPacOQdr7vCOBFylCknOceAtioPhzVz+8oAXyi6pBUPa8rBPBGtWGpdj69RP0+wFkr/x6Bwf+aJ8AOqw7Rqsc9kifAQSs8DQz+fgI46YkhGPzjBHDRE0Iw+Of5DHDR7OGb/fqrEwDRBEA0AXQwaw2x/lwnAKIJgGgCIJoAOhm9j9v/+xAA0QRANAEQTQAdjdrL7f/9CIBoAiCaAIgmgM7u3s/t/30JgGgCIJoAiCaAG9y1p9v/+xMA0QRANAEQTQA36b2v2//vIQCiCYBoArhRr7XF+nMfARBNAEQTANEEcLOr+7v9/14CIJoAiCYAoglggLN7vP3/fgIgmgCIJgCiCWCQo/u8/X8MARBNAEQTANEEMNDevd7+P44AiCYAogmAaAIY7Gf7vf1/LAEQTQBEEwDRBDDBuz3f/j+eAIgmAKIJgGgCmGS779v/5xAA0QRANAEQTQATfez99v95BEA0AUzm7j+XAIgmAKIJgGgCIJoAiCYAogmAaAIgmgCIJgCiCYBoAiCaAIgmAKIJgGgCIJoAiCYAogmAaP8D7kQxPu8H2FMAAAAASUVORK5CYII="/>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    html,body{height:100%;overflow:hidden;background:#f0f2f5;font-family:'Segoe UI',system-ui,sans-serif}
+
+    /* HEADER */
+    header{
+      background:#1a73e8;color:#fff;
+      padding:14px 16px;
+      display:flex;align-items:center;gap:10px;
+      position:fixed;top:0;left:0;right:0;z-index:10;
+      box-shadow:0 2px 8px rgba(0,0,0,.25);
+    }
+    header h1{font-size:1.05rem;font-weight:700;letter-spacing:.01em}
+    .header-sub{font-size:.7rem;opacity:.8;margin-top:1px}
+
+    /* MAIN SCROLL AREA */
+    .page{
+      position:fixed;top:60px;bottom:0;left:0;right:0;
+      overflow-y:auto;-webkit-overflow-scrolling:touch;
+      padding:12px 12px 100px;
+      display:flex;flex-direction:column;gap:10px;
+    }
+
+    /* BUSCA */
+    .search-wrap{display:flex;gap:8px}
+    .search-wrap input{
+      flex:1;padding:12px 14px;
+      border:1.5px solid #ddd;border-radius:12px;
+      font-size:.95rem;outline:none;background:#fff;
+      transition:border-color .2s;
+    }
+    .search-wrap input:focus{border-color:#1a73e8}
+    .search-wrap button{
+      padding:0 16px;background:#1a73e8;color:#fff;
+      border:none;border-radius:12px;font-size:1.1rem;cursor:pointer;
+    }
+
+    .count-label{font-size:.78rem;color:#999;padding-left:2px}
+
+    /* PAINEL CLIENTE SELECIONADO */
+    .detail-panel{
+      background:#fff;border-radius:14px;
+      border:1.5px solid #1a73e8;
+      padding:16px;
+      display:none;flex-direction:column;gap:10px;
+      box-shadow:0 4px 16px rgba(26,115,232,.15);
+    }
+    .detail-panel.visible{display:flex}
+    .detail-name{font-size:1rem;font-weight:700;color:#111}
+    .detail-row{display:flex;align-items:flex-start;gap:8px;font-size:.85rem;color:#555}
+    .detail-row .ico{flex-shrink:0;font-size:.95rem;margin-top:1px}
+
+    .btn-maps{
+      display:flex;align-items:center;justify-content:center;gap:8px;
+      padding:14px;background:#34a853;color:#fff;
+      border:none;border-radius:12px;
+      font-size:.95rem;font-weight:700;cursor:pointer;
+      text-decoration:none;margin-top:2px;
+      -webkit-appearance:none;
+    }
+    .btn-maps:active{background:#2d8f47}
+
+    /* LISTA */
+    .results-list{display:flex;flex-direction:column;gap:7px}
+
+    .client-card{
+      background:#fff;border:1.5px solid #e8e8e8;
+      border-radius:12px;padding:13px 14px;cursor:pointer;
+      transition:border-color .15s,background .15s;
+      user-select:none;
+    }
+    .client-card:active{background:#e8f0fe;border-color:#1a73e8}
+    .client-card.active{background:#1a73e8;border-color:#1a73e8;color:#fff}
+    .client-card.active .client-meta{color:#c5d8f8}
+
+    .client-name{font-weight:700;font-size:.9rem}
+    .client-meta{font-size:.75rem;color:#888;margin-top:3px;line-height:1.4}
+
+    /* EMPTY */
+    .empty{text-align:center;color:#ccc;padding:40px 0;font-size:.9rem}
+    .empty .ei{font-size:2.5rem;margin-bottom:8px}
+
+    /* TOAST */
+    #toast{
+      position:fixed;bottom:20px;left:50%;
+      transform:translateX(-50%) translateY(80px);
+      background:#323232;color:#fff;
+      padding:10px 20px;border-radius:10px;
+      font-size:.85rem;transition:transform .3s;
+      z-index:999;pointer-events:none;white-space:nowrap;
+    }
+    #toast.show{transform:translateX(-50%) translateY(0)}
+
+    @media(min-width:500px){
+      .page{max-width:480px;margin:0 auto;left:0;right:0}
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <span style="font-size:1.4rem">📍</span>
+  <div>
+    <h1>Localizador de Clientes</h1>
+    <div class="header-sub" id="headerSub">Carregando...</div>
+  </div>
+</header>
+
+<div class="page">
+  <div class="search-wrap">
+    <input type="search" id="searchInput" placeholder="Buscar cliente pelo nome..." autocomplete="off" oninput="buscar()"/>
+    <button onclick="buscar()">🔍</button>
+  </div>
+
+  <div class="count-label" id="countLabel"></div>
+
+  <div class="detail-panel" id="detailPanel">
+    <div class="detail-name" id="detailNome"></div>
+    <div class="detail-row"><span class="ico">📍</span><span id="detailEndereco"></span></div>
+    <div class="detail-row" id="rowTel" style="display:none"><span class="ico">📞</span><span id="detailTel"></span></div>
+    <a class="btn-maps" id="btnMaps" href="#" target="_blank" rel="noopener">
+      🗺️ Abrir rota no Google Maps
+    </a>
+  </div>
+
+  <div class="results-list" id="resultsList">
+    <div class="empty"><div class="ei">⏳</div><p>Carregando clientes...</p></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// Carregar clientes do CSV externo
+async function carregarCSV() {
+  try {
+    const resp = await fetch('clientes.csv');
+    if (!resp.ok) throw new Error('Erro ao carregar clientes.csv');
+    const texto = await resp.text();
+    const linhas = texto.trim().split('\n');
+    const cabecalho = linhas[0].split(',');
+    const idx = {
+      nome: cabecalho.findIndex(h => h.trim().toLowerCase() === 'nome'),
+      endereco: cabecalho.findIndex(h => h.trim().toLowerCase().includes('enderec')),
+      cidade: cabecalho.findIndex(h => h.trim().toLowerCase() === 'cidade'),
+      telefone: cabecalho.findIndex(h => h.trim().toLowerCase() === 'telefone'),
+      lat: cabecalho.findIndex(h => h.trim().toLowerCase() === 'lat'),
+      lng: cabecalho.findIndex(h => h.trim().toLowerCase() === 'lng'),
+    };
+    return linhas.slice(1).filter(l => l.trim()).map((linha, i) => {
+      // Parser CSV simples respeitando aspas
+      const cols = [];
+      let cur = '', inQ = false;
+      for (const ch of linha) {
+        if (ch === '"') { inQ = !inQ; }
+        else if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
+        else cur += ch;
+      }
+      cols.push(cur.trim());
+      const lat = parseFloat(cols[idx.lat]);
+      const lng = parseFloat(cols[idx.lng]);
+      return {
+        id: i,
+        n: (cols[idx.nome] || '').trim(),
+        e: (cols[idx.endereco] || '').trim(),
+        c: (cols[idx.cidade] || '').trim(),
+        t: (cols[idx.telefone] || '').trim(),
+        la: isNaN(lat) ? null : lat,
+        lo: isNaN(lng) ? null : lng,
+      };
+    });
+  } catch(err) {
+    document.getElementById('resultsList').innerHTML =
+      '<div class="empty"><div class="ei">⚠️</div><p>Erro ao carregar clientes.<br>'+err.message+'</p></div>';
+    document.getElementById('headerSub').textContent = 'Erro ao carregar';
+    return [];
+  }
+}
+
+
+let clientes=[];
+let filtrados=[];
+let selecionado=null;
+
+async function init(){
+  document.getElementById('headerSub').textContent='Carregando...';
+  document.getElementById('resultsList').innerHTML='<div class="empty"><div class="ei">⏳</div><p>Carregando clientes...</p></div>';
+  clientes = await carregarCSV();
+  filtrados=[...clientes];
+  document.getElementById('headerSub').textContent=clientes.length+' clientes';
+  renderizar();
+}
+
+function buscar(){
+  const t=document.getElementById('searchInput').value.toLowerCase().trim();
+  filtrados=t?clientes.filter(c=>
+    (c.n||'').toLowerCase().includes(t)||
+    (c.c||'').toLowerCase().includes(t)||
+    (c.e||'').toLowerCase().includes(t)
+  ):[...clientes];
+  renderizar();
+  // Fechar painel se mudou a busca
+  if(t) document.getElementById('detailPanel').classList.remove('visible');
+}
+
+function renderizar(){
+  const lbl=document.getElementById('countLabel');
+  const lista=document.getElementById('resultsList');
+
+  lbl.textContent=filtrados.length===clientes.length
+    ?`${clientes.length} clientes encontrados`
+    :`${filtrados.length} de ${clientes.length} clientes`;
+
+  if(!filtrados.length){
+    lista.innerHTML='<div class="empty"><div class="ei">🔍</div><p>Nenhum cliente encontrado</p></div>';
+    return;
+  }
+
+  lista.innerHTML=filtrados.slice(0,200).map(c=>{
+    const ativo=selecionado&&selecionado.id===c.id?'active':'';
+    const end=[c.e,c.c].filter(Boolean).join(' · ');
+    return`<div class="client-card ${ativo}" id="card-${c.id}" onclick="selecionar(${c.id})">
+      <div class="client-name">${(c.n||'(sem nome)').trim()}</div>
+      <div class="client-meta">📍 ${end||'—'}</div>
+    </div>`;
+  }).join('');
+}
+
+function selecionar(id){
+  selecionado=clientes.find(c=>c.id===id);
+  if(!selecionado)return;
+
+  const end=[selecionado.e,selecionado.c].filter(Boolean).join(', ');
+  document.getElementById('detailNome').textContent=(selecionado.n||'Cliente').trim();
+  document.getElementById('detailEndereco').textContent=end||'—';
+
+  const rowTel=document.getElementById('rowTel');
+  if(selecionado.t){
+    document.getElementById('detailTel').textContent=selecionado.t;
+    rowTel.style.display='flex';
+  }else{
+    rowTel.style.display='none';
+  }
+
+  const btn=document.getElementById('btnMaps');
+  if(selecionado.la&&selecionado.lo){
+    btn.href=`https://www.google.com/maps/dir/?api=1&destination=${selecionado.la},${selecionado.lo}&travelmode=driving`;
+  }else{
+    btn.href=`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(end)}&travelmode=driving`;
+  }
+
+  document.getElementById('detailPanel').classList.add('visible');
+  document.getElementById('detailPanel').scrollIntoView({behavior:'smooth',block:'nearest'});
+  renderizar();
+}
+
+let toastTimer;
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove('show'),3000);
+}
+
+// Service worker
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+
+init();
+</script>
+</body>
+</html>
