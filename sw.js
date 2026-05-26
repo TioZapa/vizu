@@ -1,5 +1,12 @@
-const CACHE = 'localizador-v1';
-const ASSETS = ['/', '/index.html', '/manifest.json', '/sw.js'];
+const CACHE = 'vizu-v1';
+const ASSETS = [
+  '/vizu/',
+  '/vizu/index.html',
+  '/vizu/manifest.json',
+  '/vizu/clientes.csv',
+  '/vizu/icons/icon-192x192.png',
+  '/vizu/icons/icon-512x512.png'
+];
 
 self.addEventListener('install', e => {
   e.waitUntil(
@@ -17,6 +24,6 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   e.respondWith(
-    caches.match(e.request).then(cached => cached || fetch(e.request).catch(() => caches.match('/index.html')))
+    caches.match(e.request).then(cached => cached || fetch(e.request).catch(() => caches.match('/vizu/index.html')))
   );
 });
