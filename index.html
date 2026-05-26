@@ -115,7 +115,7 @@
 <header>
   <span style="font-size:1.4rem">📍</span>
   <div>
-    <h1>Vizu - Localizador de Clientes</h1>
+    <h1>Localizador de Clientes</h1>
     <div class="header-sub" id="headerSub">Carregando...</div>
   </div>
   <img src="icons/logo.jpg" alt="logoFenix" class="logo">
@@ -161,19 +161,30 @@ async function carregarCSV() {
     const dados = await resp.json();
     if (dados.erro) throw new Error(dados.erro);
 
+    // Corrige coordenadas sem ponto decimal (ex: -10190556 → -10.190556)
+    function corrigirCoord(val) {
+      if (!val && val !== 0) return null;
+      const num = parseFloat(val);
+      if (isNaN(num)) return null;
+      if (Math.abs(num) <= 90) return num;
+      for (const div of [10, 100, 1000, 10000, 100000, 1000000, 10000000]) {
+        const r = num / div;
+        if (Math.abs(r) <= 90) return parseFloat(r.toFixed(7));
+      }
+      return null;
+    }
+
     // Normalizar campos (cabeçalhos da planilha)
     const clientes = dados.map((row, i) => {
       const n = (row.nome || row.Nome || '').toString().trim();
       const e = (row.endereco || row.Endereco || row.endereço || row.Endereço || '').toString().trim();
       const c = (row.cidade || row.Cidade || '').toString().trim();
       const t = (row.telefone || row.Telefone || '').toString().trim();
-      const lat = parseFloat(row.lat || row.Lat || row.latitude || '');
-      const lng = parseFloat(row.lng || row.Lng || row.longitude || '');
       return {
         id: i,
         n, e, c, t,
-        la: isNaN(lat) ? null : lat,
-        lo: isNaN(lng) ? null : lng,
+        la: corrigirCoord(row.lat || row.Lat || row.latitude),
+        lo: corrigirCoord(row.lng || row.Lng || row.longitude),
       };
     });
 
