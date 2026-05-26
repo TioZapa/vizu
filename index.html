@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="Localizador"/>
   <title>Localizador de Clientes</title>
   <link rel="manifest" href="manifest.json"/>
-  <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAEiElEQVR4nO3dXY7kRBCF0RzEHpBgmcMy2CYSrAJepqWS1dXjn3SmM+45z4PKdsVnR4nu6m+/f//nvwahfpl9ADCTAIgmAKIJgGgCIJoAiCYAogmAaAIgmgCIJgCiCYBoAiCaAIgmAKIJgGgCIJoAiCYAogmAaAIgmgCIJgCiCYBoAiCaAIgmAKIJgGgCINqvsw8gxd9//Xb4v/njz39vOBJeffP16P2dGfa9RNGXADq5c+jfEcN1ArhoxuBvCeE8AZz0hMHfEsJxAjjoiYO/JYT9BLDTCoO/JYSf8/8Bdlhx+Ftb97hH8gT4QqUB8jT4nCfAG5WGv7V659OLAD5RdViqntcVAtioPiTVz+8oAbxIGY6U89xDAD+kDUXa+b4jgJY7DKnn/So+gPQhSD//6ADS3/wPydchNoDkN/0zqdcjNgBoLTSA1LvdzyRel7gAEt/kI9KuT1wA8CoqgLS721lJ1ykqANiK+X2Ap9zV9vxc/krHujpfjDXA0UF6/fdPiaGqiCfArCHqeQetcA5P5DPATXoPTvVBnKV8AJW+sW1GBNVXsPIBjHb3kHoS9CWAjkYNpwj6KR3AyMf36KEc+XqV16DSAYwy647sSXCdAC6aPYSzX391AiCaAC54yt33KcexorIBVP7gNkPV61k2ANhDACc9be142vGsQgBEEwDRBEA0ARBNAEQTANEEQDQBEE0AJz3tRwOedjyrEADRygbgRwP6qno9ywYwwlPWjqccx4oEQDQBXDT77jv79VcngA5mDaHhv650AJW/OqTyV76MVDqA0UYNpTt/PwLo7O7hNPx9lQ+g0hfKVvqi36coH8AsvYfVnf8eEX8go7W5A3TlLrrqca/Cn0ga4HWIV/obYQlingCtGawjEu7+rfkMQLioAFLualclXaeoAGArLoCku9sZadcnLoDW8t7kvRKvS2QA8CE2gMS73VdSr0dsAK3lvulbydchOoDWst/81px/fACt5Q5B6nm/EsAPacOQdr7vCOBFylCknOceAtioPhzVz+8oAXyi6pBUPa8rBPBGtWGpdj69RP0+wFkr/x6Bwf+aJ8AOqw7Rqsc9kifAQSs8DQz+fgI46YkhGPzjBHDRE0Iw+Of5DHDR7OGb/fqrEwDRBEA0AXQwaw2x/lwnAKIJgGgCIJoAOhm9j9v/+xAA0QRANAEQTQAdjdrL7f/9CIBoAiCaAIgmgM7u3s/t/30JgGgCIJoAiCaAG9y1p9v/+xMA0QRANAEQTQA36b2v2//vIQCiCYBoArhRr7XF+nMfARBNAEQTANEEcLOr+7v9/14CIJoAiCYAoglggLN7vP3/fgIgmgCIJgCiCWCQo/u8/X8MARBNAEQTANEEMNDevd7+P44AiCYAogmAaAIY7Gf7vf1/LAEQTQBEEwDRBDDBuz3f/j+eAIgmAKIJgGgCmGS779v/5xAA0QRANAEQTQATfez99v95BEA0AUzm7j+XAIgmAKIJgGgCIJoAiCYAogmAaAIgmgCIJgCiCYBoAiCaAIgmAKIJgGgCIJoAiCYAogmAaP8D7kQxPu8H2FMAAAAASUVORK5CYII="/>
+  <link rel="apple-touch-icon" href="icons/icon-192x192.png"/>
   <style>
     *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
     html,body{height:100%;overflow:hidden;background:#f0f2f5;font-family:'Segoe UI',system-ui,sans-serif}
@@ -271,15 +271,4 @@ function toast(msg){
   const el=document.getElementById('toast');
   el.textContent=msg;el.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>el.classList.remove('show'),3000);
-}
-
-// Service worker
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw.js').catch(()=>{});
-}
-
-init();
-</script>
-</body>
-</html>
+  toastTimer=setTim
