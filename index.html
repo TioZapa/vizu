@@ -16,7 +16,7 @@
 
     /* HEADER */
     header{
-      background:#008000;color:#fff;
+      background:#1a73e8;color:#fff;
       padding:14px 16px;
       display:flex;align-items:center;gap:10px;
       position:fixed;top:0;left:0;right:0;z-index:10;
@@ -43,9 +43,9 @@
       font-size:.95rem;outline:none;background:#fff;
       transition:border-color .2s;
     }
-    .search-wrap input:focus{border-color:#008000}
+    .search-wrap input:focus{border-color:#1a73e8}
     .search-wrap button{
-      padding:0 16px;background:#008000;color:#fff;
+      padding:0 16px;background:#1a73e8;color:#fff;
       border:none;border-radius:12px;font-size:1.1rem;cursor:pointer;
     }
 
@@ -54,7 +54,7 @@
     /* PAINEL CLIENTE SELECIONADO */
     .detail-panel{
       background:#fff;border-radius:14px;
-      border:1.5px solid #008000;
+      border:1.5px solid #1a73e8;
       padding:16px;
       display:none;flex-direction:column;gap:10px;
       box-shadow:0 4px 16px rgba(26,115,232,.15);
@@ -83,8 +83,8 @@
       transition:border-color .15s,background .15s;
       user-select:none;
     }
-    .client-card:active{background:#e8f0fe;border-color:#008000}
-    .client-card.active{background:#008000;border-color:#1a73e8;color:#fff}
+    .client-card:active{background:#e8f0fe;border-color:#1a73e8}
+    .client-card.active{background:#1a73e8;border-color:#1a73e8;color:#fff}
     .client-card.active .client-meta{color:#c5d8f8}
 
     .client-name{font-weight:700;font-size:.9rem}
@@ -115,7 +115,7 @@
 <header>
   <span style="font-size:1.4rem">📍</span>
   <div>
-    <h1>Vizu - Localizador de Clientes</h1>
+    <h1>Localizador de Clientes</h1>
     <div class="header-sub" id="headerSub">Carregando...</div>
   </div>
   <img src="icons/logo.jpg" alt="logoFenix" class="logo">
@@ -123,7 +123,7 @@
 
 <div class="page">
   <div class="search-wrap">
-    <input type="search" id="searchInput" placeholder="Buscar cliente..." autocomplete="off" oninput="buscar()"/>
+    <input type="search" id="searchInput" placeholder="Buscar cliente pelo nome..." autocomplete="off" oninput="buscar()"/>
     <button onclick="buscar()">🔍</button>
   </div>
 
@@ -146,47 +146,55 @@
 <div id="toast"></div>
 
 <script>
-// Carregar clientes do CSV externo
+// API privada Google Sheets
+const API_URL = 'https://script.google.com/macros/s/AKfycbyJsZ3Y2-pDEi2spAXhKssNr3hnzu9t-REDjnFeOIS4T512iGXN2avswBHSXtujlkiw/exec';
+const API_KEY = 'vizu2024#seguro';
+
+// Cache local no dispositivo (para funcionar offline)
+const CACHE_KEY = 'vizu_clientes_cache';
+
 async function carregarCSV() {
   try {
-    const resp = await fetch('clientes.csv');
-    if (!resp.ok) throw new Error('Erro ao carregar clientes.csv');
-    const texto = await resp.text();
-    const linhas = texto.trim().split('\n');
-    const cabecalho = linhas[0].split(',');
-    const idx = {
-      nome: cabecalho.findIndex(h => h.trim().toLowerCase() === 'nome'),
-      endereco: cabecalho.findIndex(h => h.trim().toLowerCase().includes('enderec')),
-      cidade: cabecalho.findIndex(h => h.trim().toLowerCase() === 'cidade'),
-      telefone: cabecalho.findIndex(h => h.trim().toLowerCase() === 'telefone'),
-      lat: cabecalho.findIndex(h => h.trim().toLowerCase() === 'lat'),
-      lng: cabecalho.findIndex(h => h.trim().toLowerCase() === 'lng'),
-    };
-    return linhas.slice(1).filter(l => l.trim()).map((linha, i) => {
-      // Parser CSV simples respeitando aspas
-      const cols = [];
-      let cur = '', inQ = false;
-      for (const ch of linha) {
-        if (ch === '"') { inQ = !inQ; }
-        else if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
-        else cur += ch;
-      }
-      cols.push(cur.trim());
-      const lat = parseFloat(cols[idx.lat]);
-      const lng = parseFloat(cols[idx.lng]);
+    // Tentar buscar da API
+    const resp = await fetch(`${API_URL}?key=${encodeURIComponent(API_KEY)}`);
+    if (!resp.ok) throw new Error('Erro na API');
+    const dados = await resp.json();
+    if (dados.erro) throw new Error(dados.erro);
+
+    // Normalizar campos (cabeçalhos da planilha)
+    const clientes = dados.map((row, i) => {
+      const n = (row.nome || row.Nome || '').toString().trim();
+      const e = (row.endereco || row.Endereco || row.endereço || row.Endereço || '').toString().trim();
+      const c = (row.cidade || row.Cidade || '').toString().trim();
+      const t = (row.telefone || row.Telefone || '').toString().trim();
+      const lat = parseFloat(row.lat || row.Lat || row.latitude || '');
+      const lng = parseFloat(row.lng || row.Lng || row.longitude || '');
       return {
         id: i,
-        n: (cols[idx.nome] || '').trim(),
-        e: (cols[idx.endereco] || '').trim(),
-        c: (cols[idx.cidade] || '').trim(),
-        t: (cols[idx.telefone] || '').trim(),
+        n, e, c, t,
         la: isNaN(lat) ? null : lat,
         lo: isNaN(lng) ? null : lng,
       };
     });
+
+    // Salvar cache local para uso offline
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify(clientes)); } catch(e) {}
+
+    return clientes;
+
   } catch(err) {
+    // Se falhar (offline), tentar cache local
+    try {
+      const cache = localStorage.getItem(CACHE_KEY);
+      if (cache) {
+        const clientes = JSON.parse(cache);
+        document.getElementById('headerSub').textContent = clientes.length + ' clientes (offline)';
+        return clientes;
+      }
+    } catch(e) {}
+
     document.getElementById('resultsList').innerHTML =
-      '<div class="empty"><div class="ei">⚠️</div><p>Erro ao carregar clientes.<br>'+err.message+'</p></div>';
+      '<div class="empty"><div class="ei">⚠️</div><p>Sem conexão e sem cache.<br>Abra o app online uma vez primeiro.</p></div>';
     document.getElementById('headerSub').textContent = 'Erro ao carregar';
     return [];
   }
