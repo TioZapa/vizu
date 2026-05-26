@@ -271,4 +271,19 @@ function toast(msg){
   const el=document.getElementById('toast');
   el.textContent=msg;el.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer=setTim
+  toastTimer=setTimeout(()=>el.classList.remove('show'),3000);
+}
+
+// Desinstalar service workers antigos e iniciar
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.getRegistrations().then(regs => {
+    regs.forEach(r => r.unregister());
+  }).then(() => {
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
+
+init();
+</script>
+</body>
+</html>
