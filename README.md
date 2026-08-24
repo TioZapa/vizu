@@ -28,9 +28,6 @@ vizu/
     └── icon-512x512.png
 ```
 
-> **Nota:** O arquivo `clientes.csv` foi removido do repositório e colocados em uma planilha priavada do google sheets.
-
-
 ## Integração com Google Sheets
 
 Os clientes são carregados via **Google Apps Script**, que funciona como uma API privada protegida por chave de acesso.
@@ -89,4 +86,4 @@ O app está publicado via GitHub Pages:
 - [Google Maps](https://maps.google.com) — Navegação e rotas
 - [GitHub Pages](https://pages.github.com) — Hospedagem
 - PWA (Progressive Web App) — Instalação e cache offline
-- [CLAUDE IA](https://claude.ai/) - geração de logos icones e o manifest para o PWA
+- CHATGPT(https://chatgpt.com/) - geração de logos icones e o manifest para o PWA
